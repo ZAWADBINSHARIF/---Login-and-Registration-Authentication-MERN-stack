@@ -1,0 +1,17 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+.formInput{
+    border: none;
+    border-bottom: 1px solid #198754;
+    outline: none;
+    outline-color: none !important;
+}
+
+.formInput:focus{
+    border-bottom: 1px solid #198754;
+    -webkit-box-shadow: none;
+    box-shadow: none
+}
