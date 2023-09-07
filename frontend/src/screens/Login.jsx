@@ -1,15 +1,42 @@
 // external import
 import { Button, Col, Form, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 // internal import
 import FormContainer from '../components/FormContainer.jsx'
+import { setCredentials } from '../slices/authSlice.js'
+import { useLoginMutation } from '../slices/usersApiSlice.js'
+import { toast } from 'react-toastify'
 
 const Login = () => {
 
+  // * Hooks have been called
+  const dispatch = useDispatch()
+  const { userInfo } = useSelector(state => state.auth)
+  const [login, { isLoading }] = useLoginMutation()
+  const navigate = useNavigate()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  useEffect(() => {
+    if (userInfo)
+      navigate('/')
+  }, [navigate, userInfo])
+
+  const handleLogin = async () => {
+    try {
+      const response = await login({ email, password }).unwrap()
+      dispatch(setCredentials({ ...response }))
+      toast.success(`${response.name} is sing in`)
+      navigate('/')
+    } catch (err) {
+      console.log(err)
+      toast.error(err?.data?.message || err.error)
+    }
+  }
 
   return (
     <FormContainer>
@@ -39,7 +66,7 @@ const Login = () => {
           />
         </FormGroup>
 
-        <Button className='mt-3' type='submit' variant='success'>
+        <Button className='mt-3' type='submit' variant='success' onClick={() => handleLogin()}>
           Sign In
         </Button>
 
