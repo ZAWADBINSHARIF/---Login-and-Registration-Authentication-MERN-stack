@@ -4,6 +4,7 @@ import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { LinkContainer } from 'react-router-bootstrap'
 import {useNavigate} from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 // internal import
 import { useLogoutMutation } from '../slices/usersApiSlice'
@@ -23,6 +24,7 @@ const Header = () => {
         try {
             await logoutApiCall().unwrap()
             dispatch(logout())
+            toast.success('Logged out')
             navigate('/')
         } catch (err) {
             console.log(err)

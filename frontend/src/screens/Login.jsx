@@ -9,6 +9,7 @@ import FormContainer from '../components/FormContainer.jsx'
 import { setCredentials } from '../slices/authSlice.js'
 import { useLoginMutation } from '../slices/usersApiSlice.js'
 import { toast } from 'react-toastify'
+import Loading from '../components/Loading.jsx'
 
 const Login = () => {
 
@@ -30,7 +31,7 @@ const Login = () => {
     try {
       const response = await login({ email, password }).unwrap()
       dispatch(setCredentials({ ...response }))
-      toast.success(`${response.name} is sing in`)
+      toast.success(`${response.name} has logged in`)
       navigate('/')
     } catch (err) {
       console.log(err)
@@ -66,9 +67,15 @@ const Login = () => {
           />
         </FormGroup>
 
-        <Button className='mt-3' type='submit' variant='success' onClick={() => handleLogin()}>
-          Sign In
-        </Button>
+        {isLoading ? (
+          <Loading
+          variant='success'
+          />
+        ) : (
+          <Button className='mt-3' type='submit' variant='success' onClick={() => handleLogin()}>
+            Sign In
+          </Button>
+        )}
 
         <Row className='py-3'>
           <Col>

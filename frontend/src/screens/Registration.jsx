@@ -1,17 +1,49 @@
 // external import
 import { Button, Col, Form, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { useDispatch, useSelector } from 'react-redux'
 
 // internal import
 import FormContainer from '../components/FormContainer.jsx'
+import { useRegistrationMutation } from '../slices/usersApiSlice.js'
+import { setCredentials } from '../slices/authSlice.js'
+import Loading from '../components/Loading.jsx'
 
 const Registration = () => {
+
+  // * hooks have been called
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const [registration, { isLoading }] = useRegistrationMutation()
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const { userInfo } = useSelector(state => state.auth)
+
+  async function handleRegistration() {
+    if (password === confirmPassword) {
+      try {
+        const response = await registration({ name, email, password }).unwrap()
+        dispatch(setCredentials({ ...response }))
+        toast.success(`${response.name} has logged in`)
+        navigate('/')
+      } catch (err) {
+        console.log(err)
+        toast.error(err?.data?.message || err?.error.message)
+      }
+    } else {
+      toast.error('Confirm password does not match')
+    }
+  }
+
+  useEffect(() => {
+    if (userInfo)
+      navigate('/')
+  }, [navigate, userInfo])
 
   return (
     <FormContainer>
@@ -63,9 +95,15 @@ const Registration = () => {
           />
         </FormGroup>
 
-        <Button className='mt-3' type='submit' variant='warning'>
-          Sign Up
-        </Button>
+        {isLoading ? (
+          <Loading
+            variant='warning'
+          />
+        ) : (
+          <Button className='mt-3' type='submit' variant='warning' onClick={() => handleRegistration()}>
+            Sign Up
+          </Button>
+        )}
 
         <Row className='py-3'>
           <Col>
@@ -76,7 +114,7 @@ const Registration = () => {
         </Row>
 
       </Form>
-    </FormContainer>
+    </FormContainer >
   )
 }
 export default Registration

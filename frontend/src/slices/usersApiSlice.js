@@ -1,7 +1,7 @@
 // internal import
 import { apiSlice } from "./apiSlice";
 
-const USERS_URL = '/api/users'
+const USERS_URL = '/users'
 
 export const usersApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
@@ -17,8 +17,18 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 url: `${USERS_URL}/logout`,
                 method: 'POST'
             })
+        }),
+        registration: builder.mutation({
+            query: (data) => ({
+                url: `${USERS_URL}/registration`,
+                method: 'POST',
+                body: data
+            })
         })
     })
 })
 
-export const { useLoginMutation, useLogoutMutation } = usersApiSlice
+export const {
+    useLoginMutation,
+    useLogoutMutation,
+    useRegistrationMutation } = usersApiSlice

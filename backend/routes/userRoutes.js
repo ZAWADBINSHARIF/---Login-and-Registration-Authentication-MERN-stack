@@ -14,7 +14,7 @@ import { jwtVerifier } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
-router.post('/', registerUser)
+router.post('/registration', registerUser)
 router.post('/auth', authUser)
 router.post('/logout', logoutUser)
 router.route('/profile')
