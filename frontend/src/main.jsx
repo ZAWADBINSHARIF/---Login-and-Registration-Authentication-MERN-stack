@@ -16,6 +16,7 @@ import HomeScreen from './screens/HomeScreen.jsx'
 import ErrorPage from './screens/ErrorPage.jsx'
 import Login from './screens/Login.jsx'
 import Registration from './screens/Registration.jsx'
+import Profile from './screens/Profile.jsx'
 import store from './store.js'
 import './index.css'
 
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
       <Route path='/' element={<HomeScreen />} />
       <Route path='/login' element={<Login />} />
       <Route path='/registration' element={<Registration />} />
+      <Route path='/profile' element={<Profile />} />
       <Route />
     </Route>
   )
