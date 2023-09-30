@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import express from 'express'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
+import path from 'path'
 
 // internal import
 import userRoutes from './routes/userRoutes.js'
@@ -27,7 +28,17 @@ app.use(express.json())
 // for getting form data values
 app.use(express.urlencoded({ extended: true }))
 
+
+const __dirname = path.resolve()
+app.use(express.static(path.join(__dirname, 'frontend', 'dist')))
+
+// this is API router for CURD oparation
 app.use('/api/users', userRoutes)
+
+// this router works for sending front end data
+app.use('*', (req, res) => res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html')))
+
+
 
 // 404 Not Found Page
 app.use(notFound)
